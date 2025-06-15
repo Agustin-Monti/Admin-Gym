@@ -1,0 +1,165 @@
+{
+  "node": {
+    "6fb78b787127d8f0d226c0243632cf8cac0d4a37": {
+      "workers": {
+        "app/(auth-pages)/sign-in/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cagu20%5C%5COneDrive%5C%5CEscritorio%5C%5Cadmin-bicho%5C%5Cadmin-bicho%5C%5Cactions%5C%5Cauth-actions%5C%5Cactions.ts%22%2C%5B%22verificarAdmin%22%2C%22forgotPasswordAction%22%2C%22resetPasswordAction%22%2C%22signOutAction%22%2C%22signUpAction%22%2C%22signInAction%22%5D%5D%5D&__client_imported__=!"
+      },
+      "layer": {
+        "app/(auth-pages)/sign-in/page": "rsc"
+      }
+    },
+    "b9197ac94069b02e13bb38d5c15e5e4dfa8d0d33": {
+      "workers": {
+        "app/(auth-pages)/sign-in/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cagu20%5C%5COneDrive%5C%5CEscritorio%5C%5Cadmin-bicho%5C%5Cadmin-bicho%5C%5Cactions%5C%5Cauth-actions%5C%5Cactions.ts%22%2C%5B%22verificarAdmin%22%2C%22forgotPasswordAction%22%2C%22resetPasswordAction%22%2C%22signOutAction%22%2C%22signUpAction%22%2C%22signInAction%22%5D%5D%5D&__client_imported__=!"
+      },
+      "layer": {
+        "app/(auth-pages)/sign-in/page": "rsc"
+      }
+    },
+    "9b6834e1d9230d8fc227e8d6e0e59925c05e4262": {
+      "workers": {
+        "app/(auth-pages)/sign-in/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cagu20%5C%5COneDrive%5C%5CEscritorio%5C%5Cadmin-bicho%5C%5Cadmin-bicho%5C%5Cactions%5C%5Cauth-actions%5C%5Cactions.ts%22%2C%5B%22verificarAdmin%22%2C%22forgotPasswordAction%22%2C%22resetPasswordAction%22%2C%22signOutAction%22%2C%22signUpAction%22%2C%22signInAction%22%5D%5D%5D&__client_imported__=!"
+      },
+      "layer": {
+        "app/(auth-pages)/sign-in/page": "rsc"
+      }
+    },
+    "6eacc4cad809e9b0787d339da24f228e8d9338e7": {
+      "workers": {
+        "app/(auth-pages)/sign-in/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cagu20%5C%5COneDrive%5C%5CEscritorio%5C%5Cadmin-bicho%5C%5Cadmin-bicho%5C%5Cactions%5C%5Cauth-actions%5C%5Cactions.ts%22%2C%5B%22verificarAdmin%22%2C%22forgotPasswordAction%22%2C%22resetPasswordAction%22%2C%22signOutAction%22%2C%22signUpAction%22%2C%22signInAction%22%5D%5D%5D&__client_imported__=!"
+      },
+      "layer": {
+        "app/(auth-pages)/sign-in/page": "rsc"
+      }
+    },
+    "55661b8f3da5d1edff3b9f86c384d47dad3ae468": {
+      "workers": {
+        "app/(auth-pages)/sign-in/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cagu20%5C%5COneDrive%5C%5CEscritorio%5C%5Cadmin-bicho%5C%5Cadmin-bicho%5C%5Cactions%5C%5Cauth-actions%5C%5Cactions.ts%22%2C%5B%22verificarAdmin%22%2C%22forgotPasswordAction%22%2C%22resetPasswordAction%22%2C%22signOutAction%22%2C%22signUpAction%22%2C%22signInAction%22%5D%5D%5D&__client_imported__=!"
+      },
+      "layer": {
+        "app/(auth-pages)/sign-in/page": "rsc"
+      }
+    },
+    "57197ed99d7a8348c77bbd53640846a940b11786": {
+      "workers": {
+        "app/(auth-pages)/sign-in/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cagu20%5C%5COneDrive%5C%5CEscritorio%5C%5Cadmin-bicho%5C%5Cadmin-bicho%5C%5Cactions%5C%5Cauth-actions%5C%5Cactions.ts%22%2C%5B%22verificarAdmin%22%2C%22forgotPasswordAction%22%2C%22resetPasswordAction%22%2C%22signOutAction%22%2C%22signUpAction%22%2C%22signInAction%22%5D%5D%5D&__client_imported__=!"
+      },
+      "layer": {
+        "app/(auth-pages)/sign-in/page": "rsc"
+      }
+    },
+    "08525d37e0edd0278e9a50f4cb958545b03298a4": {
+      "workers": {
+        "app/home/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cagu20%5C%5COneDrive%5C%5CEscritorio%5C%5Cadmin-bicho%5C%5Cadmin-bicho%5C%5Cactions%5C%5Cdashboard-actions%5C%5Cindex.ts%22%2C%5B%22contarUsuariosUltimosMeses%22%2C%22contarEjercicios%22%2C%22contarUsuarios%22%2C%22contarRutinas%22%2C%22contarMembresiasPorEstado%22%5D%5D%5D&__client_imported__=true!"
+      },
+      "layer": {
+        "app/home/page": "action-browser"
+      }
+    },
+    "8b86cbc045c6ab6c643cdd0fd15d6fad5ec9399c": {
+      "workers": {
+        "app/home/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cagu20%5C%5COneDrive%5C%5CEscritorio%5C%5Cadmin-bicho%5C%5Cadmin-bicho%5C%5Cactions%5C%5Cdashboard-actions%5C%5Cindex.ts%22%2C%5B%22contarUsuariosUltimosMeses%22%2C%22contarEjercicios%22%2C%22contarUsuarios%22%2C%22contarRutinas%22%2C%22contarMembresiasPorEstado%22%5D%5D%5D&__client_imported__=true!"
+      },
+      "layer": {
+        "app/home/page": "action-browser"
+      }
+    },
+    "f15ed1bb190f96414554b6ff62b51d74d5ce6a75": {
+      "workers": {
+        "app/home/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cagu20%5C%5COneDrive%5C%5CEscritorio%5C%5Cadmin-bicho%5C%5Cadmin-bicho%5C%5Cactions%5C%5Cdashboard-actions%5C%5Cindex.ts%22%2C%5B%22contarUsuariosUltimosMeses%22%2C%22contarEjercicios%22%2C%22contarUsuarios%22%2C%22contarRutinas%22%2C%22contarMembresiasPorEstado%22%5D%5D%5D&__client_imported__=true!"
+      },
+      "layer": {
+        "app/home/page": "action-browser"
+      }
+    },
+    "c3d568dc54fbf4b4dfe3f0b5ad138c64acd51379": {
+      "workers": {
+        "app/home/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cagu20%5C%5COneDrive%5C%5CEscritorio%5C%5Cadmin-bicho%5C%5Cadmin-bicho%5C%5Cactions%5C%5Cdashboard-actions%5C%5Cindex.ts%22%2C%5B%22contarUsuariosUltimosMeses%22%2C%22contarEjercicios%22%2C%22contarUsuarios%22%2C%22contarRutinas%22%2C%22contarMembresiasPorEstado%22%5D%5D%5D&__client_imported__=true!"
+      },
+      "layer": {
+        "app/home/page": "action-browser"
+      }
+    },
+    "aa6c36a9ee35b8f6f57523c46d2478bed5363bff": {
+      "workers": {
+        "app/home/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cagu20%5C%5COneDrive%5C%5CEscritorio%5C%5Cadmin-bicho%5C%5Cadmin-bicho%5C%5Cactions%5C%5Cdashboard-actions%5C%5Cindex.ts%22%2C%5B%22contarUsuariosUltimosMeses%22%2C%22contarEjercicios%22%2C%22contarUsuarios%22%2C%22contarRutinas%22%2C%22contarMembresiasPorEstado%22%5D%5D%5D&__client_imported__=true!"
+      },
+      "layer": {
+        "app/home/page": "action-browser"
+      }
+    },
+    "ca719195007f150103ae100c99e50564e9728aac": {
+      "workers": {
+        "app/ejercicios/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cagu20%5C%5COneDrive%5C%5CEscritorio%5C%5Cadmin-bicho%5C%5Cadmin-bicho%5C%5Cactions%5C%5Cejercicios-actions%5C%5Cindex.ts%22%2C%5B%22getEjercicios%22%2C%22actualizarEjercicio%22%2C%22crearEjercicio%22%5D%5D%5D&__client_imported__=true!"
+      },
+      "layer": {
+        "app/ejercicios/page": "action-browser"
+      }
+    },
+    "43452b4f124a93cb8ee3571b02ce311882c91c38": {
+      "workers": {
+        "app/ejercicios/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cagu20%5C%5COneDrive%5C%5CEscritorio%5C%5Cadmin-bicho%5C%5Cadmin-bicho%5C%5Cactions%5C%5Cejercicios-actions%5C%5Cindex.ts%22%2C%5B%22getEjercicios%22%2C%22actualizarEjercicio%22%2C%22crearEjercicio%22%5D%5D%5D&__client_imported__=true!"
+      },
+      "layer": {
+        "app/ejercicios/page": "action-browser"
+      }
+    },
+    "bd56ac36efddd4a8d35ce6d1db8e7768328b48c4": {
+      "workers": {
+        "app/ejercicios/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cagu20%5C%5COneDrive%5C%5CEscritorio%5C%5Cadmin-bicho%5C%5Cadmin-bicho%5C%5Cactions%5C%5Cejercicios-actions%5C%5Cindex.ts%22%2C%5B%22getEjercicios%22%2C%22actualizarEjercicio%22%2C%22crearEjercicio%22%5D%5D%5D&__client_imported__=true!"
+      },
+      "layer": {
+        "app/ejercicios/page": "action-browser"
+      }
+    },
+    "f8d84636ec142e4525d6e8beb30ce4bb9e7fff41": {
+      "workers": {
+        "app/rutinas/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cagu20%5C%5COneDrive%5C%5CEscritorio%5C%5Cadmin-bicho%5C%5Cadmin-bicho%5C%5Cactions%5C%5Crutinas-actions%5C%5Cindex.ts%22%2C%5B%22getEjercicios%22%2C%22getRutinaById%22%2C%22getUsuarios%22%2C%22actualizarRutina%22%2C%22guardarRutina%22%2C%22getRutinas%22%5D%5D%5D&__client_imported__=true!"
+      },
+      "layer": {
+        "app/rutinas/page": "action-browser"
+      }
+    },
+    "eff126b6f70806eb5a408969b0c0e6a61bd3d94f": {
+      "workers": {
+        "app/rutinas/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cagu20%5C%5COneDrive%5C%5CEscritorio%5C%5Cadmin-bicho%5C%5Cadmin-bicho%5C%5Cactions%5C%5Crutinas-actions%5C%5Cindex.ts%22%2C%5B%22getEjercicios%22%2C%22getRutinaById%22%2C%22getUsuarios%22%2C%22actualizarRutina%22%2C%22guardarRutina%22%2C%22getRutinas%22%5D%5D%5D&__client_imported__=true!"
+      },
+      "layer": {
+        "app/rutinas/page": "action-browser"
+      }
+    },
+    "07d919756b10f2314ada03c84049965aeee0826e": {
+      "workers": {
+        "app/rutinas/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cagu20%5C%5COneDrive%5C%5CEscritorio%5C%5Cadmin-bicho%5C%5Cadmin-bicho%5C%5Cactions%5C%5Crutinas-actions%5C%5Cindex.ts%22%2C%5B%22getEjercicios%22%2C%22getRutinaById%22%2C%22getUsuarios%22%2C%22actualizarRutina%22%2C%22guardarRutina%22%2C%22getRutinas%22%5D%5D%5D&__client_imported__=true!"
+      },
+      "layer": {
+        "app/rutinas/page": "action-browser"
+      }
+    },
+    "ba0c3f56a37787c89d4ee0b9aa457bfaa9a2e8ef": {
+      "workers": {
+        "app/rutinas/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cagu20%5C%5COneDrive%5C%5CEscritorio%5C%5Cadmin-bicho%5C%5Cadmin-bicho%5C%5Cactions%5C%5Crutinas-actions%5C%5Cindex.ts%22%2C%5B%22getEjercicios%22%2C%22getRutinaById%22%2C%22getUsuarios%22%2C%22actualizarRutina%22%2C%22guardarRutina%22%2C%22getRutinas%22%5D%5D%5D&__client_imported__=true!"
+      },
+      "layer": {
+        "app/rutinas/page": "action-browser"
+      }
+    },
+    "16a592c929ad7b1062567da6f4ece01f917aa0b8": {
+      "workers": {
+        "app/rutinas/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cagu20%5C%5COneDrive%5C%5CEscritorio%5C%5Cadmin-bicho%5C%5Cadmin-bicho%5C%5Cactions%5C%5Crutinas-actions%5C%5Cindex.ts%22%2C%5B%22getEjercicios%22%2C%22getRutinaById%22%2C%22getUsuarios%22%2C%22actualizarRutina%22%2C%22guardarRutina%22%2C%22getRutinas%22%5D%5D%5D&__client_imported__=true!"
+      },
+      "layer": {
+        "app/rutinas/page": "action-browser"
+      }
+    },
+    "a8f1c49f9be16eafc9f32e81d12c8edad8f7abf5": {
+      "workers": {
+        "app/rutinas/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cagu20%5C%5COneDrive%5C%5CEscritorio%5C%5Cadmin-bicho%5C%5Cadmin-bicho%5C%5Cactions%5C%5Crutinas-actions%5C%5Cindex.ts%22%2C%5B%22getEjercicios%22%2C%22getRutinaById%22%2C%22getUsuarios%22%2C%22actualizarRutina%22%2C%22guardarRutina%22%2C%22getRutinas%22%5D%5D%5D&__client_imported__=true!"
+      },
+      "layer": {
+        "app/rutinas/page": "action-browser"
+      }
+    }
+  },
+  "edge": {}
+}
