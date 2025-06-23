@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getRutinas } from "@/actions/rutinas-actions";
 import ModalEditarRutina from "@/components/ModalEditarRutina"; // importar componente
 
 
@@ -14,12 +13,16 @@ export default function RutinasTable() {
   useEffect(() => {
     const fetchRutinas = async () => {
       try {
-        console.log("Llamando a getRutinas...");
-        const data = await getRutinas();
-        console.log("Datos recibidos:", data);
-        setRutinas(data);
+        console.log("🧪 Llamando a /api/admin/rutinas...");
+        const res = await fetch("/api/admin/rutinas", { cache: "no-store" });
+        const json = await res.json();
+
+        if (!res.ok) throw new Error(json.message || "Error al obtener rutinas");
+
+        console.log("✅ Rutinas recibidas:", json.rutinas);
+        setRutinas(json.rutinas);
       } catch (error) {
-        console.error("Error al obtener rutinas:", error);
+        console.error("❌ Error al obtener rutinas:", error);
       } finally {
         setLoading(false);
       }
@@ -38,6 +41,8 @@ export default function RutinasTable() {
       `${rutina.profiles?.nombre ?? ""} ${rutina.profiles?.apellido ?? ""}`.toLowerCase();
     return nombreCompleto.includes(searchTerm.toLowerCase());
   });
+
+
 
   return (
     <div>
@@ -76,27 +81,27 @@ export default function RutinasTable() {
       ) : rutinas.length === 0 ? (
         <p>No hay rutinas registradas.</p>
       ) : (
-        <table className="w-full text-sm text-left">
-          <thead>
+        <table className="w-full text-left border-collapse border border-gray-200 shadow-md">
+          <thead className="bg-blue-600 text-white">
             <tr>
-              <th className="p-2">Usuario</th>
-              <th className="p-2">Nombre de rutina</th>
-              <th className="p-2">Días</th>
-              <th className="p-2">Acciones</th>
+              <th className="p-4 text-lg font-semibold">Usuario</th>
+              <th className="p-4 text-lg font-semibold">Nombre de rutina</th>
+              <th className="p-4 text-lg font-semibold">Días</th>
+              <th className="p-4 text-lg font-semibold">Acciones</th>
             </tr>
           </thead>
           <tbody>
-            {rutinas.map((rutina) => (
-              <tr key={rutina.id} className="border-t">
-                <td className="p-2">
+            {rutinasFiltradas.map((rutina) => (
+              <tr key={rutina.id} className="border-t border-gray-200 hover:bg-blue-50 transition-colors duration-200">
+                <td className="p-4 text-base font-medium text-gray-800">
                   {rutina.profiles?.nombre} {rutina.profiles?.apellido}
                 </td>
-                <td className="p-2">{rutina.nombre}</td>
-                <td className="p-2">{rutina.dias_por_semana}</td>
-                <td className="p-2">
+                <td className="p-4 text-base font-semibold text-gray-900">{rutina.nombre}</td>
+                <td className="p-4 text-base text-gray-700">{rutina.dias_por_semana}</td>
+                <td className="p-4">
                   <button
                     onClick={() => abrirModalEdicion(rutina)}
-                    className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+                    className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200"
                   >
                     Editar
                   </button>
@@ -105,6 +110,7 @@ export default function RutinasTable() {
             ))}
           </tbody>
         </table>
+
       )}
 
       {rutinaSeleccionada && (
