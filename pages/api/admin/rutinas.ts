@@ -16,9 +16,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         dias_por_semana,
         fecha_creacion,
         usuario_id,
-        profiles (
-        nombre,
-        apellido
+        profiles:usuario_id (
+          nombre,
+          apellido
         ),
         dias_rutina (
         id,
@@ -37,6 +37,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       )
     `);
     
+      console.log("Respuesta completa:", data);
 
 
     if (error) {
