@@ -27,12 +27,7 @@ export default function Login({
       {/* Mostrar mensaje de error si existe */}
       {message && <FormMessage message={message} />}
 
-      <p className="text-sm text-gray-600 mb-4">
-        No tiene cuenta?{" "}
-        <Link className="text-blue-600 font-medium underline" href="/sign-up">
-          Crear una Cuenta
-        </Link>
-      </p>
+      
 
       <div className="flex flex-col gap-4 w-full">
         <div className="flex flex-col gap-2">
