@@ -40,7 +40,7 @@ export default function ModalNuevoEjercicio({ mostrar, cerrar, onAgregar, onSucc
       const { data: storageData, error: storageError } = await supabase
         .storage
         .from('ejercicios')
-        .upload(`gifs/${Date.now()}-${imagen!.name}`, imagen);
+        .upload(`gifs/${Date.now()}-${imagen!.name}`, imagen!);
 
       if (storageError) {
         throw new Error(`Error subiendo la imagen: ${storageError.message}`);
