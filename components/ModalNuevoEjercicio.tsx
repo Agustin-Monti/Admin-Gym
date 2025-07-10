@@ -26,7 +26,7 @@ export default function ModalNuevoEjercicio({ mostrar, cerrar, onAgregar, onSucc
   const [cargando, setCargando] = useState(false);
 
   const handleAgregar = async () => {
-    if (!nombre.trim() || !imagen || !info.trim()) {
+    if (!nombre.trim() || !info.trim()) {
       alert("Por favor completa todos los campos.");
       return;
     }
