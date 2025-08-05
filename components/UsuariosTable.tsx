@@ -11,10 +11,13 @@ interface Usuario {
   email: string;
   nombre: string;
   apellido: string;
-  admin: boolean;
+  rango: string; 
   created_at: string;
-  updated_at: string;
   fecha_membresia?: string;
+  avatar_url?: string | null;
+  estatura?: string | null;
+  peso?: string | null;
+  fcm_token?: string | null;
 }
 
 interface UsuariosTableProps {
@@ -220,7 +223,7 @@ export default function UsuariosTable({ usuarios, setUsuarios, refetchUsuarios, 
               </h2>
               <p className="text-sm text-gray-500">{usuario.email}</p>
             </div>
-            {usuario.admin && (
+            {usuario.rango === "admin" && (
               <span className="bg-purple-100 text-purple-700 text-xs font-semibold px-2 py-1 rounded-full">
                 Admin
               </span>
