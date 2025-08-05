@@ -17,11 +17,12 @@ interface EjercicioData {
 }
 
 type Ejercicio = {
-    ejercicio_id: number;
-    series: number;
-    repeticiones: number;
-    peso: number;
+  ejercicio_id: string; 
+  series: number;
+  repeticiones: number;
+  peso: number;
 };
+
   
 
 interface DiaRutina {
@@ -38,7 +39,7 @@ interface DatosRutina {
       numeroDia: number;
       nombreDia: string; // ✅ importante
       ejercicios: {
-        ejercicioId: number;
+        ejercicioId: string;
         series: number;
         repeticiones: number;
         peso: number;
@@ -56,6 +57,13 @@ export default function CrearRutinaForm() {
     const [ejerciciosDisponibles, setEjerciciosDisponibles] = useState<EjercicioData[]>([]);
     const [modalOpen, setModalOpen] = useState(false);
     const [modalSuccess, setModalSuccess] = useState(false);
+    const [showUsuariosModal, setShowUsuariosModal] = useState(false);
+    const [busqueda, setBusqueda] = useState('');
+    const [showEjerciciosModal, setShowEjerciciosModal] = useState(false);
+    const [busquedaEjercicio, setBusquedaEjercicio] = useState('');
+    const [ejercicioSeleccionadoIndex, setEjercicioSeleccionadoIndex] = useState<{ dia: number, ej: number } | null>(null);
+
+
   
 
     // Fetch usuarios al montar
@@ -63,8 +71,17 @@ export default function CrearRutinaForm() {
         const fetchData = async () => {
           const usuariosData = await getUsuarios();
           const ejerciciosData = await getEjercicios();
+
+          console.log("💪 Ejercicios obtenidos:", ejerciciosData);
+
           setUsuarios(usuariosData);
-          setEjerciciosDisponibles(ejerciciosData);
+          setEjerciciosDisponibles(
+            ejerciciosData.map((e: any) => ({
+              ...e,
+              id: String(e.id),
+            }))
+          );
+
         };
         fetchData();
     }, []);
@@ -80,7 +97,7 @@ export default function CrearRutinaForm() {
   const agregarEjercicio = (diaIndex: number) => {
     const nuevosDias = [...rutina];
     nuevosDias[diaIndex].ejercicios.push({
-      ejercicio_id: 0,
+      ejercicio_id: "",
       series: 0,
       repeticiones: 0,
       peso: 0,
@@ -166,12 +183,6 @@ export default function CrearRutinaForm() {
   };
   
   
-  
-
-
-  
-
-
   return (
     <div className="p-4">
       <h2 className="text-xl font-semibold mb-4">Crear nueva rutina</h2>
@@ -179,18 +190,14 @@ export default function CrearRutinaForm() {
       {/* Usuario */}
         <div className="mb-4">
             <label className="block text-sm font-medium mb-1">Seleccionar usuario</label>
-            <select
-                value={usuarioId}
-                onChange={(e) => setUsuarioId(e.target.value)}
-                className="border rounded w-full p-2"
+            <button
+              onClick={() => setShowUsuariosModal(true)}
+              className="border p-2 rounded w-full text-left bg-white hover:bg-gray-100"
             >
-                <option value="">-- Seleccionar --</option>
-                {usuarios.map((usuario) => (
-                <option key={usuario.id} value={usuario.id}>
-                    {usuario.nombre} {usuario.apellido}
-                </option>
-                ))}
-            </select>
+              {usuarioId
+                ? `${usuarios.find((u) => u.id === usuarioId)?.nombre} ${usuarios.find((u) => u.id === usuarioId)?.apellido}`
+                : 'Seleccionar usuario'}
+            </button>
         </div>
 
 
@@ -239,18 +246,16 @@ export default function CrearRutinaForm() {
             <div key={ejIndex} className="grid grid-cols-5 gap-4 mb-4 items-end">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Ejercicio</label>
-              <select
-                value={ej.ejercicio_id}
-                onChange={(e) => actualizarEjercicio(diaIndex, ejIndex, "ejercicio_id", e.target.value)}
-                className="border rounded p-2 w-full"
+              <button
+                type="button"
+                onClick={() => {
+                  setEjercicioSeleccionadoIndex({ dia: diaIndex, ej: ejIndex });
+                  setShowEjerciciosModal(true);
+                }}
+                className="border rounded p-2 w-full text-left bg-white hover:bg-gray-100"
               >
-                <option value="">-- Seleccionar 1 --</option>
-                {ejerciciosDisponibles.map((ejercicio) => (
-                  <option key={ejercicio.id} value={ejercicio.id}>
-                    {ejercicio.nombre}
-                  </option>
-                ))}
-              </select>
+                {ejerciciosDisponibles.find((e) => e.id === String(ej.ejercicio_id))?.nombre || 'Seleccionar ejercicio'}
+              </button>
             </div>
           
             <div>
@@ -317,15 +322,115 @@ export default function CrearRutinaForm() {
 
       <LoadingModal isOpen={modalOpen} message="Guardando rutina..." />
 
-        <LoadingModal
+      <LoadingModal
         isOpen={modalSuccess}
         success={true}
         message="¡Rutina creada correctamente!"
         onClose={() => setModalSuccess(false)}
-        />
+      />
+
+      {/* MODAL DE USUARIOS */}
+      {showUsuariosModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[80vh] overflow-y-auto shadow-lg">
+            <h3 className="text-lg font-semibold mb-4 text-center">Seleccionar Usuario</h3>
+
+            {/* Input de búsqueda */}
+            <input
+              type="text"
+              placeholder="Buscar por nombre o apellido..."
+              value={busqueda}
+              onChange={(e) => setBusqueda(e.target.value)}
+              className="w-full mb-4 p-2 border border-gray-300 rounded"
+            />
+
+            {/* Lista de usuarios filtrada */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {usuarios
+                .filter((usuario) =>
+                  `${usuario.nombre} ${usuario.apellido}`
+                    .toLowerCase()
+                    .includes(busqueda.toLowerCase())
+                )
+                .map((usuario) => (
+                  <div
+                    key={usuario.id}
+                    onClick={() => {
+                      setUsuarioId(usuario.id);
+                      setShowUsuariosModal(false);
+                    }}
+                    className={`border rounded p-4 cursor-pointer hover:bg-gray-100 ${
+                      usuarioId === usuario.id ? 'border-blue-500 bg-blue-50' : ''
+                    }`}
+                  >
+                    <p className="font-medium">
+                      {usuario.nombre} {usuario.apellido}
+                    </p>
+                    <p className="text-sm text-gray-600">ID: {usuario.id}</p>
+                  </div>
+                ))}
+            </div>
+
+            <div className="mt-6 text-center">
+              <button
+                onClick={() => setShowUsuariosModal(false)}
+                className="text-sm text-red-600 hover:underline"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
 
-
+      {/* MODAL DE EJERCICIOS */}
+      {showEjerciciosModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[80vh] overflow-y-auto shadow-lg">
+            <h3 className="text-lg font-semibold mb-4 text-center">Seleccionar Ejercicio</h3>
+            <input
+              type="text"
+              placeholder="Buscar ejercicio..."
+              value={busquedaEjercicio}
+              onChange={(e) => setBusquedaEjercicio(e.target.value)}
+              className="w-full mb-4 p-2 border border-gray-300 rounded"
+            />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {ejerciciosDisponibles
+                .filter((ejercicio) =>
+                  ejercicio.nombre.toLowerCase().includes(busquedaEjercicio.toLowerCase())
+                )
+                .map((ejercicio) => (
+                  <div
+                    key={ejercicio.id}
+                    onClick={() => {
+                      if (ejercicioSeleccionadoIndex) {
+                        const { dia, ej } = ejercicioSeleccionadoIndex;
+                        const nuevosDias = [...rutina];
+                        nuevosDias[dia].ejercicios[ej].ejercicio_id = (ejercicio.id);
+                        setRutina(nuevosDias);
+                      }
+                      setShowEjerciciosModal(false);
+                    }}
+                    className="border rounded p-4 cursor-pointer hover:bg-gray-100"
+                  >
+                    <p className="font-medium">{ejercicio.nombre}</p>
+                    <p className="text-sm text-gray-600">ID: {ejercicio.id}</p>
+                  </div>
+                ))}
+            </div>
+            <div className="mt-6 text-center">
+              <button
+                onClick={() => setShowEjerciciosModal(false)}
+                className="text-sm text-red-600 hover:underline"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
