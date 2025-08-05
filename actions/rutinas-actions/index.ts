@@ -4,7 +4,7 @@
 import { createClient } from "@/utils/supabase/server";
 
 interface Ejercicio {
-    ejercicioId: number;
+    ejercicioId: string;
     series: number;
     repeticiones: number;
     peso: number;
