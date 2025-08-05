@@ -13,7 +13,6 @@ interface Usuario {
 interface EjercicioData {
     id: string;
     nombre: string;
-    // otros campos si necesitás
 }
 
 type Ejercicio = {
