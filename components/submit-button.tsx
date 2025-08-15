@@ -1,29 +1,36 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { type ComponentProps, useState } from "react";
+import { type ComponentProps, useState, useEffect } from "react";
 
 type Props = ComponentProps<typeof Button> & {
   pendingText?: string;
+  pending?: boolean; // Nuevo prop opcional
 };
 
 export function SubmitButton({
   children,
   pendingText = "Submitting...",
+  pending,
   ...props
 }: Props) {
   const [isPending, setIsPending] = useState(false);
 
-  const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    setIsPending(true);
+  useEffect(() => {
+    if (typeof pending === "boolean") {
+      setIsPending(pending);
+    }
+  }, [pending]);
 
-    // Si hay un form padre, lo dejamos enviar el form
+  const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (pending === undefined) {
+      setIsPending(true); // solo controla el estado interno si no viene prop
+    }
+
     const form = e.currentTarget.form;
     if (form) {
       form.requestSubmit();
     }
-
-    // Luego de enviar el form, puedes hacer cosas extra si quieres
   };
 
   return (
