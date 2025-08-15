@@ -30,7 +30,7 @@ export default async function Index() {
         <div className="mt-4">
           <Link
             href="/sign-in"
-            className="bg-white text-blue-600 font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-blue-600 transition duration-300"
+            className="bg-gradient-to-r from-blue-500 to-blue-700 text-white font-extrabold py-4 px-8 rounded-xl shadow-lg shadow-blue-900/40 transform transition-all duration-300 hover:scale-105 hover:shadow-xl hover:from-blue-600 hover:to-blue-800"
           >
             Iniciar Sesión
           </Link>
