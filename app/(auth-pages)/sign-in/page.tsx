@@ -43,7 +43,7 @@ export default function Login({
           Iniciar Sesión
         </h1>
 
-        {/* Alertas */}
+        {/* Alertasss */}
         {message?.error && <Alert type="error">{message.error}</Alert>}
         {message?.success && <Alert type="success">{message.success}</Alert>}
         {message?.message && <Alert type="success">{message.message}</Alert>}
