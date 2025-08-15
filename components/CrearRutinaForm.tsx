@@ -13,6 +13,7 @@ interface Usuario {
 interface EjercicioData {
     id: string;
     nombre: string;
+    // otros campos si necesitás
 }
 
 type Ejercicio = {
@@ -398,7 +399,7 @@ export default function CrearRutinaForm() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {ejerciciosDisponibles
                 .filter((ejercicio) =>
-                  ejercicio.nombre.toLowerCase().includes(busquedaEjercicio.toLowerCase())
+                  (ejercicio.nombre || '').toLowerCase().includes(busquedaEjercicio.toLowerCase())
                 )
                 .map((ejercicio) => (
                   <div
@@ -407,17 +408,18 @@ export default function CrearRutinaForm() {
                       if (ejercicioSeleccionadoIndex) {
                         const { dia, ej } = ejercicioSeleccionadoIndex;
                         const nuevosDias = [...rutina];
-                        nuevosDias[dia].ejercicios[ej].ejercicio_id = (ejercicio.id);
+                        nuevosDias[dia].ejercicios[ej].ejercicio_id = ejercicio.id;
                         setRutina(nuevosDias);
                       }
                       setShowEjerciciosModal(false);
                     }}
                     className="border rounded p-4 cursor-pointer hover:bg-gray-100"
                   >
-                    <p className="font-medium">{ejercicio.nombre}</p>
+                    <p className="font-medium">{ejercicio.nombre || 'Sin nombre'}</p>
                     <p className="text-sm text-gray-600">ID: {ejercicio.id}</p>
                   </div>
                 ))}
+
             </div>
             <div className="mt-6 text-center">
               <button
