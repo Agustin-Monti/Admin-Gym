@@ -54,14 +54,25 @@ export const signInAction = async (formData: FormData) => {
   const password = formData.get("password") as string;
   const supabase = await createClient();
 
+  // Diccionario de mensajes de error personalizados en español
+  const errorMessages: Record<string, string> = {
+    "Invalid login credentials": "Usuario o contraseña incorrectos",
+    "No se pudo obtener el perfil del usuario.": "No se pudo obtener el perfil del usuario.",
+    "Solo los administradores pueden iniciar sesión.": "Solo los administradores pueden iniciar sesión.",
+  };
+
   // Iniciar sesión
-  const { data: { user }, error: authError } = await supabase.auth.signInWithPassword({
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
 
   if (authError) {
-    return encodedRedirect("error", "/sign-in", authError.message);
+    const message = errorMessages[authError.message] || "Error al iniciar sesión";
+    return encodedRedirect("error", "/sign-in", message);
   }
 
   // Verificar si el usuario es admin
@@ -73,12 +84,14 @@ export const signInAction = async (formData: FormData) => {
 
   if (profileError || !profile) {
     await supabase.auth.signOut(); // Cerrar sesión si no se puede obtener el perfil
-    return encodedRedirect("error", "/sign-in", "No se pudo obtener el perfil del usuario.");
+    const message = errorMessages["No se pudo obtener el perfil del usuario."] || "Error al iniciar sesión";
+    return encodedRedirect("error", "/sign-in", message);
   }
 
   if (profile.rango !== "admin") {
     await supabase.auth.signOut(); // Cerrar sesión si no es admin
-    return encodedRedirect("error", "/sign-in", "Solo los administradores pueden iniciar sesión.");
+    const message = errorMessages["Solo los administradores pueden iniciar sesión."] || "Acceso denegado";
+    return encodedRedirect("error", "/sign-in", message);
   }
 
   // Redirigir al dashboard si es admin
