@@ -4,16 +4,10 @@ import { useState, useEffect } from "react";
 import { crearEjercicio } from "@/actions/ejercicios-actions";
 import { createClient } from "@/utils/supabase/client";
 import { Alert } from "@/components/Alert";
+import { Ejercicio } from "@/types/ejercicio";
 
 
 
-interface Ejercicio {
-  id: number;
-  nombre: string;
-  imagen: string;
-  info: string;
-  grupo_muscular_id: number;
-}
 
 interface GrupoMuscular {
   id: number;
@@ -95,7 +89,7 @@ export default function ModalNuevoEjercicio({
           nombre: data.nombre,
           info: data.info,
           imagen: data.imagen_url,
-          grupo_muscular_id: grupoMuscularId,
+          grupo_id: grupoMuscularId,
         };
         onAgregar(nuevoEjercicio);
         setAlerta({ type: "success", mensaje: "Ejercicio agregado correctamente." });
