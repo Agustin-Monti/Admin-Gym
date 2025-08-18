@@ -1,15 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { crearEjercicio } from "@/actions/ejercicios-actions";
-import { createClient } from "@/utils/supabase/client"; // NO server
-
+import { createClient } from "@/utils/supabase/client";
+import { Alert } from "@/components/Alert";
 
 interface Ejercicio {
   id: number;
   nombre: string;
   imagen: string;
   info: string;
+  grupo_muscular_id: number;
+}
+
+interface GrupoMuscular {
+  id: number;
+  nombre: string;
 }
 
 interface ModalNuevoEjercicioProps {
@@ -19,68 +25,94 @@ interface ModalNuevoEjercicioProps {
   onSuccess: () => void;
 }
 
-export default function ModalNuevoEjercicio({ mostrar, cerrar, onAgregar, onSuccess  }: ModalNuevoEjercicioProps) {
-  const [nombre, setNombre] = useState('');
+export default function ModalNuevoEjercicio({
+  mostrar,
+  cerrar,
+  onAgregar,
+  onSuccess,
+}: ModalNuevoEjercicioProps) {
+  const [nombre, setNombre] = useState("");
   const [imagen, setImagen] = useState<File | null>(null);
-  const [info, setInfo] = useState('');
+  const [info, setInfo] = useState("");
+  const [grupoMuscularId, setGrupoMuscularId] = useState<number | null>(null);
   const [cargando, setCargando] = useState(false);
+  const [gruposMusculares, setGruposMusculares] = useState<GrupoMuscular[]>([]);
+  const [alerta, setAlerta] = useState<{ type: "error" | "success"; mensaje: string } | null>(
+    null
+  );
+
+  const supabase = createClient();
+
+  useEffect(() => {
+    const fetchGrupos = async () => {
+      const { data, error } = await supabase.from("grupos_musculares").select("*");
+      if (error) {
+        setAlerta({ type: "error", mensaje: "Error al cargar grupos musculares." });
+        console.error(error.message);
+      } else {
+        setGruposMusculares(data);
+      }
+    };
+    fetchGrupos();
+  }, [supabase]);
 
   const handleAgregar = async () => {
-   if (!nombre.trim() || !imagen || !info.trim()) {
-      alert("Por favor completa todos los campos.");
+    if (!nombre.trim() || !imagen || !info.trim() || !grupoMuscularId) {
+      setAlerta({ type: "error", mensaje: "Por favor completa todos los campos." });
       return;
     }
 
     try {
       setCargando(true);
+      setAlerta(null);
 
-      const supabase = createClient(); // crear cliente aquí también
-
-      // 1. Subir imagen a Supabase Storage
       const { data: storageData, error: storageError } = await supabase
         .storage
-        .from('ejercicios')
+        .from("ejercicios")
         .upload(`gifs/${Date.now()}-${imagen.name}`, imagen);
 
-      if (storageError) {
-        throw new Error(`Error subiendo la imagen: ${storageError.message}`);
-      }
+      if (storageError) throw new Error(storageError.message);
 
-      // 2. Obtener la URL pública de la imagen subida
       const { data: publicUrlData } = supabase
         .storage
-        .from('ejercicios')
+        .from("ejercicios")
         .getPublicUrl(storageData.path);
 
       const imagenUrl = publicUrlData.publicUrl;
 
-      // 3. Ahora sí, pasar nombre, info y la URL de la imagen a crearEjercicio
-      const { success, data, error } = await crearEjercicio(nombre, info, imagenUrl);
+      const { success, data, error } = await crearEjercicio(
+        nombre,
+        info,
+        imagenUrl,
+        grupoMuscularId
+      );
 
       if (success && data) {
         const nuevoEjercicio: Ejercicio = {
           id: data.id,
           nombre: data.nombre,
-          imagen: data.imagen_url,
           info: data.info,
+          imagen: data.imagen_url,
+          grupo_muscular_id: grupoMuscularId,
         };
-
         onAgregar(nuevoEjercicio);
+        setAlerta({ type: "success", mensaje: "Ejercicio agregado correctamente." });
         cerrar();
-        setNombre('');
+        setNombre("");
         setImagen(null);
-        setInfo('');
+        setInfo("");
+        setGrupoMuscularId(null);
         onSuccess();
       } else {
-        alert(`Error al crear ejercicio: ${error}`);
+        setAlerta({ type: "error", mensaje: `Error al crear ejercicio: ${error}` });
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.error("Error al agregar ejercicio:", error);
-        alert("Error al agregar el ejercicio: " + error.message);
+        setAlerta({ type: "error", mensaje: "Error al agregar ejercicio: " + error.message });
+        console.error(error);
       } else {
-        console.error("Error desconocido:", error);
-        alert("Error desconocido al agregar el ejercicio.");
+        setAlerta({ type: "error", mensaje: "Error desconocido al agregar el ejercicio." });
+        console.error(error);
       }
     } finally {
       setCargando(false);
@@ -91,43 +123,64 @@ export default function ModalNuevoEjercicio({ mostrar, cerrar, onAgregar, onSucc
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-        <h2 className="text-xl font-bold mb-4">Nuevo Ejercicio</h2>
-        
-        <input
-          type="text"
-          placeholder="Nombre"
-          className="w-full mb-2 border p-2 rounded"
-          value={nombre}
-          onChange={(e) => setNombre(e.target.value)}
-        />
+      <div className="bg-white p-8 rounded-2xl shadow-2xl w-11/12 max-w-2xl">
+        <h2 className="text-2xl font-bold mb-6 text-center">Agregar Nuevo Ejercicio</h2>
 
-        <input
-          type="file"
-          accept="image/gif"
-          className="w-full mb-2 border p-2 rounded"
-          onChange={(e) => e.target.files && setImagen(e.target.files[0])}
-        />
+        {alerta && (
+          <div className="mb-4">
+            <Alert type={alerta.type}>{alerta.mensaje}</Alert>
+          </div>
+        )}
 
-        <textarea
-          placeholder="Información adicional"
-          className="w-full mb-4 border p-2 rounded"
-          value={info}
-          onChange={(e) => setInfo(e.target.value)}
-        />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <input
+            type="text"
+            placeholder="Nombre del ejercicio"
+            className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
+          />
 
-        <div className="flex justify-end gap-2">
+          <select
+            value={grupoMuscularId ?? ""}
+            onChange={(e) => setGrupoMuscularId(Number(e.target.value))}
+            className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          >
+            <option value="">Seleccionar grupo muscular</option>
+            {gruposMusculares.map((grupo) => (
+              <option key={grupo.id} value={grupo.id}>
+                {grupo.nombre}
+              </option>
+            ))}
+          </select>
+
+          <input
+            type="file"
+            accept="image/gif"
+            onChange={(e) => e.target.files && setImagen(e.target.files[0])}
+            className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+
+          <textarea
+            placeholder="Información adicional"
+            value={info}
+            onChange={(e) => setInfo(e.target.value)}
+            className="w-full md:col-span-2 border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+        </div>
+
+        <div className="flex justify-end gap-3 mt-6">
           <button
             onClick={cerrar}
-            className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
             disabled={cargando}
+            className="px-6 py-2 rounded-lg bg-gray-400 text-white hover:bg-gray-500 transition"
           >
             Cancelar
           </button>
           <button
             onClick={handleAgregar}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
             disabled={cargando}
+            className="px-6 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition"
           >
             {cargando ? "Guardando..." : "Agregar"}
           </button>
