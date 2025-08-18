@@ -50,24 +50,31 @@ export async function crearEjercicio(nombre: string, info: string, imagenUrl: st
     console.error("Error desconocido:", error);
     return { success: false, error: "Error desconocido" };
   }
-
+}
 
 
 export async function actualizarEjercicio(
   id: number,
   nombre: string,
   info: string,
-  imagenUrl?: string
+  imagenUrl?: string,
+  grupoMuscularId?: number
 ) {
   const supabase = await createClient();
 
-  const updateData: { nombre: string; info: string; imagen_url?: string } = {
-    nombre,
-    info,
-  };
+  const updateData: {
+    nombre: string;
+    info: string;
+    imagen_url?: string;
+    grupo_id?: number;
+  } = { nombre, info };
 
   if (imagenUrl) {
     updateData.imagen_url = imagenUrl;
+  }
+
+  if (grupoMuscularId) {
+    updateData.grupo_id = grupoMuscularId;
   }
 
   const { data, error } = await supabase
@@ -83,6 +90,7 @@ export async function actualizarEjercicio(
 
   return { success: true, ejercicio: data };
 }
+
 
 
 
