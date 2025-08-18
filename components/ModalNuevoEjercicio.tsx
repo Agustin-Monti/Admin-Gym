@@ -5,6 +5,8 @@ import { crearEjercicio } from "@/actions/ejercicios-actions";
 import { createClient } from "@/utils/supabase/client";
 import { Alert } from "@/components/Alert";
 
+
+
 interface Ejercicio {
   id: number;
   nombre: string;
