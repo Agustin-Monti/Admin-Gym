@@ -1,31 +1,28 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { actualizarEjercicio } from "@/actions/ejercicios-actions";
 import ModalCarga from "@/components/ModalCarga";
 import { Alert } from "@/components/Alert";
 import { useRouter } from "next/navigation";
-
-interface Ejercicio {
-  id: number;
-  nombre: string;
-  imagen: string;
-  info: string;
-  grupo_id?: number;
-  imagen_url?: string;
-}
+import { Ejercicio } from "@/types/ejercicio"; // ✅ usamos el global
 
 interface GrupoMuscular {
   id: number;
   nombre: string;
 }
 
+// Tipo extendido solo para el modal (admite imagen_url)
+interface EjercicioConUrl extends Ejercicio {
+  imagen_url?: string;
+}
+
 interface ModalEditarEjercicioProps {
-  ejercicio: Ejercicio | null;
+  ejercicio: EjercicioConUrl | null;
   isOpen: boolean;
   onClose: () => void;
-  onSave: (ejercicioActualizado: Ejercicio) => void;
+  onSave: (ejercicioActualizado: Ejercicio) => void; // ✅ usa el global
 }
 
 export default function ModalEditarEjercicio({
@@ -34,17 +31,19 @@ export default function ModalEditarEjercicio({
   onClose,
   onSave,
 }: ModalEditarEjercicioProps) {
-  const [formData, setFormData] = useState<Ejercicio>({
+  const [formData, setFormData] = useState<EjercicioConUrl>({
     id: 0,
-    nombre: '',
-    imagen: '',
-    info: '',
-    grupo_id: undefined,
+    nombre: "",
+    imagen: "",
+    info: "",
+    grupo_id: 0,
   });
-  const [archivoImagen, setArchivoImagen] = useState<File | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [cargando, setCargando] = useState(false);
-  const [alerta, setAlerta] = useState<{ type: "error" | "success"; mensaje: string } | null>(null);
+  const [alerta, setAlerta] = useState<{
+    type: "error" | "success";
+    mensaje: string;
+  } | null>(null);
   const [gruposMusculares, setGruposMusculares] = useState<GrupoMuscular[]>([]);
 
   const supabase = createClient();
@@ -53,12 +52,17 @@ export default function ModalEditarEjercicio({
   // Cargar grupos musculares
   useEffect(() => {
     const fetchGrupos = async () => {
-      const { data, error } = await supabase.from("grupos_musculares").select("*");
+      const { data, error } = await supabase
+        .from("grupos_musculares")
+        .select("*");
       if (error) {
-        setAlerta({ type: "error", mensaje: "Error al cargar grupos musculares." });
+        setAlerta({
+          type: "error",
+          mensaje: "Error al cargar grupos musculares.",
+        });
         console.error(error.message);
       } else {
-        setGruposMusculares(data);
+        setGruposMusculares(data || []);
       }
     };
     fetchGrupos();
@@ -66,22 +70,22 @@ export default function ModalEditarEjercicio({
 
   // Setear datos del ejercicio a editar
   useEffect(() => {
-    if (ejercicio && gruposMusculares.length > 0) {
+    if (ejercicio) {
       setFormData({
         id: ejercicio.id,
         nombre: ejercicio.nombre,
         imagen: ejercicio.imagen_url || ejercicio.imagen,
         info: ejercicio.info,
-        grupo_id: ejercicio.grupo_id ?? undefined, // <-- usar grupo_id
+        grupo_id: ejercicio.grupo_id,
       });
       setFile(null);
     }
-  }, [ejercicio, gruposMusculares]);
-
-
+  }, [ejercicio]);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -101,9 +105,14 @@ export default function ModalEditarEjercicio({
     const filePath = ejercicio.imagen_url.split("/public/ejercicios/")[1];
     if (!filePath) return;
 
-    const { error: storageError } = await supabase.storage.from("ejercicios").remove([filePath]);
+    const { error: storageError } = await supabase.storage
+      .from("ejercicios")
+      .remove([filePath]);
     if (storageError) {
-      setAlerta({ type: "error", mensaje: "Error al eliminar la imagen del bucket." });
+      setAlerta({
+        type: "error",
+        mensaje: "Error al eliminar la imagen del bucket.",
+      });
       return;
     }
 
@@ -113,12 +122,18 @@ export default function ModalEditarEjercicio({
       .eq("id", ejercicio.id);
 
     if (dbError) {
-      setAlerta({ type: "error", mensaje: "Error al actualizar la base de datos." });
+      setAlerta({
+        type: "error",
+        mensaje: "Error al actualizar la base de datos.",
+      });
       return;
     }
 
     setFormData((prev) => ({ ...prev, imagen: "" }));
-    setAlerta({ type: "success", mensaje: "Imagen eliminada correctamente." });
+    setAlerta({
+      type: "success",
+      mensaje: "Imagen eliminada correctamente.",
+    });
 
     setTimeout(() => setAlerta(null), 3000);
   };
@@ -127,7 +142,10 @@ export default function ModalEditarEjercicio({
     e.preventDefault();
 
     if (!formData.nombre.trim() || !formData.info.trim() || !formData.grupo_id) {
-      setAlerta({ type: "error", mensaje: "Por favor completa todos los campos." });
+      setAlerta({
+        type: "error",
+        mensaje: "Por favor completa todos los campos.",
+      });
       return;
     }
 
@@ -139,7 +157,7 @@ export default function ModalEditarEjercicio({
 
       if (file) {
         const nombreArchivo = `gifs/${Date.now()}-${file.name}`;
-        const { data: uploadData, error: uploadError } = await supabase.storage
+        const { error: uploadError } = await supabase.storage
           .from("ejercicios")
           .upload(nombreArchivo, file);
 
@@ -152,13 +170,14 @@ export default function ModalEditarEjercicio({
         imagenUrl = publicUrlData.publicUrl;
       }
 
-      const { success, ejercicio: ejercicioActualizado } = await actualizarEjercicio(
-        formData.id,
-        formData.nombre,
-        formData.info,
-        imagenUrl,
-        formData.grupo_id
-      );
+      const { success, ejercicio: ejercicioActualizado } =
+        await actualizarEjercicio(
+          formData.id,
+          formData.nombre,
+          formData.info,
+          imagenUrl,
+          formData.grupo_id
+        );
 
       if (success && ejercicioActualizado) {
         onSave({
@@ -166,16 +185,28 @@ export default function ModalEditarEjercicio({
           nombre: ejercicioActualizado.nombre,
           imagen: ejercicioActualizado.imagen_url,
           info: ejercicioActualizado.info,
-          grupo_id: ejercicioActualizado.grupo_muscular_id,
+          grupo_id: ejercicioActualizado.grupo_id, // ✅ consistente
         });
-        setAlerta({ type: "success", mensaje: "Ejercicio actualizado correctamente." });
+        setAlerta({
+          type: "success",
+          mensaje: "Ejercicio actualizado correctamente.",
+        });
         onClose();
-        setFormData({ id: 0, nombre: "", imagen: "", info: "", grupo_id: undefined });
+        setFormData({
+          id: 0,
+          nombre: "",
+          imagen: "",
+          info: "",
+          grupo_id: 0,
+        });
         setFile(null);
       }
     } catch (error: any) {
       console.error(error);
-      setAlerta({ type: "error", mensaje: "Error al actualizar el ejercicio: " + error.message });
+      setAlerta({
+        type: "error",
+        mensaje: "Error al actualizar el ejercicio: " + error.message,
+      });
     } finally {
       setCargando(false);
     }
@@ -188,9 +219,16 @@ export default function ModalEditarEjercicio({
       <div className="bg-white p-8 rounded-2xl shadow-2xl w-11/12 max-w-2xl">
         <h2 className="text-2xl font-bold mb-6 text-center">Editar Ejercicio</h2>
 
-        {alerta && <div className="mb-4"><Alert type={alerta.type}>{alerta.mensaje}</Alert></div>}
+        {alerta && (
+          <div className="mb-4">
+            <Alert type={alerta.type}>{alerta.mensaje}</Alert>
+          </div>
+        )}
 
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <form
+          onSubmit={handleSubmit}
+          className="grid grid-cols-1 md:grid-cols-2 gap-4"
+        >
           <input
             name="nombre"
             value={formData.nombre}
@@ -200,10 +238,13 @@ export default function ModalEditarEjercicio({
           />
 
           <select
-            name="grupo_muscular_id"
+            name="grupo_id"
             value={formData.grupo_id?.toString() ?? ""}
             onChange={(e) =>
-              setFormData({ ...formData, grupo_id: e.target.value ? Number(e.target.value) : undefined })
+              setFormData({
+                ...formData,
+                grupo_id: e.target.value ? Number(e.target.value) : 0,
+              })
             }
             className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
           >
@@ -215,12 +256,15 @@ export default function ModalEditarEjercicio({
             ))}
           </select>
 
-
           <div className="md:col-span-1">
             <label className="block font-semibold mb-1">Imagen</label>
             {formData.imagen ? (
               <div className="mb-2">
-                <img src={formData.imagen} alt="Vista previa" className="w-32 h-32 object-cover mb-2 rounded" />
+                <img
+                  src={formData.imagen}
+                  alt="Vista previa"
+                  className="w-32 h-32 object-cover mb-2 rounded"
+                />
                 <button
                   type="button"
                   onClick={handleEliminarImagen}
@@ -265,7 +309,6 @@ export default function ModalEditarEjercicio({
             </button>
           </div>
         </form>
-
       </div>
       {cargando && <ModalCarga mensaje="Guardando cambios..." />}
     </div>
