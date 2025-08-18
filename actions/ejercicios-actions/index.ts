@@ -28,14 +28,14 @@ export async function getEjercicios() {
   
 
 
-export async function crearEjercicio(nombre: string, info: string, imagenUrl: string) {
+export async function crearEjercicio(nombre: string, info: string, imagenUrl: string, grupoMuscularId: number) {
   try {
     const supabase = await createClient();
 
     // Insertar en la base de datos
     const { data: dbData, error: dbError } = await supabase
       .from('ejercicios')
-      .insert([{ nombre, info, imagen_url: imagenUrl }])
+      .insert([{ nombre, info, imagen_url: imagenUrl, grupo_muscular_id: grupoMuscularId }])
       .select()
       .single();
 
@@ -50,7 +50,7 @@ export async function crearEjercicio(nombre: string, info: string, imagenUrl: st
     console.error("Error desconocido:", error);
     return { success: false, error: "Error desconocido" };
   }
-}
+
 
 
 export async function actualizarEjercicio(
