@@ -1,11 +1,12 @@
 'use client';
 
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/solid';
-import { useState, useMemo } from 'react';
+import { eliminarEjercicio } from "@/actions/ejercicios-actions";
+import { useState, useMemo, useEffect } from 'react';
 import ModalEditarEjercicio from './ModalEditarEjercicio';
+import ModalConfirmacion from './ModalConfirmacion';
 import { Ejercicio } from "@/types/ejercicio";
-
-
+import { createClient } from "@/utils/supabase/client";
 
 interface EjerciciosTableProps {
   ejercicios: Ejercicio[];
@@ -18,16 +19,41 @@ export default function EjerciciosTable({ ejercicios, setEjercicios }: Ejercicio
   const [search, setSearch] = useState('');
   const [sortAsc, setSortAsc] = useState(true);
   const [imagenSeleccionada, setImagenSeleccionada] = useState<string | null>(null);
+  const [grupos, setGrupos] = useState<{ id: number; nombre: string }[]>([]);
+  const [grupoFiltro, setGrupoFiltro] = useState<number | "">("");
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [ejercicioAEliminar, setEjercicioAEliminar] = useState<Ejercicio | null>(null);
 
+  useEffect(() => {
+    const fetchGrupos = async () => {
+      const supabase = createClient();
+      const { data, error } = await supabase.from("grupos_musculares").select("id, nombre");
+      if (!error && data) setGrupos(data);
+    };
+    fetchGrupos();
+  }, []);
 
   const handleEditar = (ejercicio: Ejercicio) => {
     setEjercicioEditar(ejercicio);
     setIsModalOpen(true);
   };
 
-  const handleEliminar = (id: number) => {
-    const filtrados = ejercicios.filter((ej) => ej.id !== id);
-    setEjercicios(filtrados);
+  const handleEliminarClick = (ejercicio: Ejercicio) => {
+    setEjercicioAEliminar(ejercicio);
+    setShowConfirmModal(true);
+  };
+
+  const handleConfirmarEliminar = async () => {
+    if (!ejercicioAEliminar) return;
+
+    const success = await eliminarEjercicio(ejercicioAEliminar.id);
+
+    if (success) {
+      setEjercicios(ejercicios.filter((ej) => ej.id !== ejercicioAEliminar.id));
+    } else {
+      alert("No se pudo eliminar el ejercicio. Intenta de nuevo.");
+    }
+    setShowConfirmModal(false);
   };
 
   const handleGuardar = (ejercicioActualizado: Ejercicio) => {
@@ -38,13 +64,23 @@ export default function EjerciciosTable({ ejercicios, setEjercicios }: Ejercicio
   };
 
   const ejerciciosFiltrados = useMemo(() => {
-    const filtrados = ejercicios.filter((ej) =>
+    let filtrados = ejercicios.filter((ej) =>
       ej.nombre.toLowerCase().includes(search.toLowerCase())
     );
+
+    if (grupoFiltro !== "") {
+      filtrados = filtrados.filter((ej) => ej.grupo_id === grupoFiltro);
+    }
+
     return filtrados.sort((a, b) =>
       sortAsc ? a.nombre.localeCompare(b.nombre) : b.nombre.localeCompare(a.nombre)
     );
-  }, [ejercicios, search, sortAsc]);
+  }, [ejercicios, search, sortAsc, grupoFiltro]);
+
+  const getNombreGrupo = (id: number) => {
+    const grupo = grupos.find((g) => g.id === id);
+    return grupo ? grupo.nombre : "—";
+  };
 
   if (ejercicios.length === 0) return <p className="mt-4 text-gray-600">No hay ejercicios aún.</p>;
 
@@ -65,6 +101,20 @@ export default function EjerciciosTable({ ejercicios, setEjercicios }: Ejercicio
         >
           Ordenar por nombre ({sortAsc ? 'A-Z' : 'Z-A'})
         </button>
+        <select
+          value={grupoFiltro}
+          onChange={(e) =>
+            setGrupoFiltro(e.target.value ? Number(e.target.value) : "")
+          }
+          className="border border-gray-300 rounded-lg px-4 py-2 w-full sm:w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        >
+          <option value="">Todos los grupos</option>
+          {grupos.map((grupo) => (
+            <option key={grupo.id} value={grupo.id}>
+              {grupo.nombre}
+            </option>
+          ))}
+        </select>
       </div>
 
       {/* Tabla estilizada */}
@@ -74,6 +124,7 @@ export default function EjerciciosTable({ ejercicios, setEjercicios }: Ejercicio
             <tr>
               <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">ID</th>
               <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Nombre</th>
+              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Grupo Muscular</th>
               <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Imagen</th>
               <th className="px-4 py-3 text-sm font-semibold text-gray-700 text-center">Acciones</th>
             </tr>
@@ -83,18 +134,15 @@ export default function EjerciciosTable({ ejercicios, setEjercicios }: Ejercicio
               <tr key={ej.id} className="hover:bg-gray-50 transition">
                 <td className="px-4 py-3 text-sm text-gray-600">{ej.id}</td>
                 <td className="px-4 py-3 text-sm text-gray-600">{ej.nombre}</td>
+                <td className="px-4 py-3 text-sm text-gray-600">{getNombreGrupo(ej.grupo_id)}</td>
                 <td className="px-4 py-3">
                   <button
-                    onClick={() => {
-                      console.log('Imagen seleccionada:', ej.imagen);
-                      setImagenSeleccionada(ej.imagen);
-                    }}
+                    onClick={() => setImagenSeleccionada(ej.imagen)}
                     className="text-blue-500 hover:underline text-sm"
                   >
                     Ver imagen
                   </button>
                 </td>
-
                 <td className="px-4 py-3 text-center">
                   <button
                     onClick={() => handleEditar(ej)}
@@ -104,7 +152,7 @@ export default function EjerciciosTable({ ejercicios, setEjercicios }: Ejercicio
                     <PencilIcon className="w-5 h-5" />
                   </button>
                   <button
-                    onClick={() => handleEliminar(ej.id)}
+                    onClick={() => handleEliminarClick(ej)}
                     className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-full transition"
                     title="Eliminar"
                   >
@@ -117,7 +165,7 @@ export default function EjerciciosTable({ ejercicios, setEjercicios }: Ejercicio
         </table>
       </div>
 
-      {/* Modal */}
+      {/* Modal de edición */}
       <ModalEditarEjercicio
         ejercicio={ejercicioEditar}
         isOpen={isModalOpen}
@@ -125,12 +173,24 @@ export default function EjerciciosTable({ ejercicios, setEjercicios }: Ejercicio
         onSave={handleGuardar}
       />
 
+      {/* Modal de confirmación de eliminación */}
+      <ModalConfirmacion
+        isOpen={showConfirmModal}
+        onClose={() => setShowConfirmModal(false)}
+        onConfirm={handleConfirmarEliminar}
+        mensaje={`¿Seguro que deseas eliminar el ejercicio "${ejercicioAEliminar?.nombre}"?`}
+      />
+
+      {/* Modal de visualización de imagen */}
       {imagenSeleccionada && (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-70 flex items-center justify-center p-4">
           <div className="bg-white p-4 rounded-lg shadow-lg max-w-md w-full">
             <div className="flex justify-between items-center mb-2">
               <h2 className="text-lg font-semibold">Vista previa</h2>
-              <button onClick={() => setImagenSeleccionada(null)} className="text-gray-500 hover:text-gray-700">
+              <button 
+                onClick={() => setImagenSeleccionada(null)} 
+                className="text-gray-500 hover:text-gray-700"
+              >
                 ✕
               </button>
             </div>
@@ -142,7 +202,6 @@ export default function EjerciciosTable({ ejercicios, setEjercicios }: Ejercicio
           </div>
         </div>
       )}
-
     </div>
   );
 }
