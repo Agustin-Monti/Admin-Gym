@@ -91,6 +91,22 @@ export async function actualizarEjercicio(
   return { success: true, ejercicio: data };
 }
 
+export const eliminarEjercicio = async (id: number) => {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    const res = await fetch(`${baseUrl}api/admin/eliminarEjercicio?id=${id}`, {
+      method: "DELETE",
+    });
+
+    if (!res.ok) throw new Error("Error en la petición DELETE");
+
+    return true;
+  } catch (err) {
+    console.error("Error en eliminarEjercicio:", err);
+    return false;
+  }
+};
+
 
 
 
