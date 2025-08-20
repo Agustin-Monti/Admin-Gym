@@ -4,10 +4,10 @@
 import { createClient } from "@/utils/supabase/server";
 
 interface Ejercicio {
-    ejercicioId: string;
-    series: number;
-    repeticiones: number;
-    peso: number;
+  ejercicioId: string;
+  series: number;
+  repeticiones: number;
+  peso: number;
 }
   
 interface Dia {
@@ -33,7 +33,7 @@ export const getUsuarios = async () => {
 export const getEjercicios = async () => {
     try {
       const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-      const res = await fetch(`${baseUrl}api/admin/ejercicios`);
+      const res = await fetch(`${baseUrl}api/admin/ejercicios-rutina`);
       const data = await res.json();
       return data;
     } catch (err) {
@@ -117,21 +117,7 @@ export const guardarRutina = async (
 };
 
 
-// lib/rutinas-actions.ts
-export const getRutinas = async () => {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-    const res = await fetch(`${baseUrl}/api/admin/rutinas`);
-    const json = await res.json();
 
-    if (!res.ok) throw new Error(json.message || 'Error al obtener rutinas');
-
-    return json.rutinas;
-  } catch (err) {
-    console.error('Error en getRutinas:', err);
-    return [];
-  }
-};
 
 export const getRutinaById = async (id: string) => {
   try {
@@ -256,6 +242,18 @@ export const actualizarRutina = async (
   }
 };
 
+
+export const getGruposMusculares = async () => {
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+      const res = await fetch(`${baseUrl}/api/admin/grupos-musculares`);
+      const data = await res.json();
+      return data;
+    } catch (err) {
+      console.error('Error en getGruposMusculares:', err);
+      return [];
+    }
+};
   
 
   
